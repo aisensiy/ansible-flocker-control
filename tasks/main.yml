@@ -12,14 +12,8 @@
 
 - apt: update_cache=yes
 
-- name: Install flocker node
-  apt: name=clusterhq-flocker-node force=yes
-
 - name: Install plugin
   apt: name=clusterhq-flocker-docker-plugin force=yes
-
-- name: Install flocker cli
-  apt: name=clusterhq-flocker-cli force=yes
 
 - name: Create flocker config directory
   file: path=/etc/flocker state=directory
@@ -39,26 +33,6 @@
     src: bakedcerts/control.crt
     dest: /etc/flocker/control-service.crt
 
-- name: Copy agent key
-  copy:
-    src: bakedcerts/node1.crt
-    dest: /etc/flocker/node.crt
-
-- name: Copy agent crt
-  copy:
-    src: bakedcerts/node1.key
-    dest: /etc/flocker/node.key
-
-- name: Copy plugin key
-  copy:
-    src: bakedcerts/plugin.key
-    dest: /etc/flocker/plugin.key
-
-- name: Copy plugin crt
-  copy:
-    src: bakedcerts/plugin.crt
-    dest: /etc/flocker/plugin.crt
-
 - name: Set control config
   template: src=templates/flocker-control.j2 dest=/etc/init/flocker-control.override
 
@@ -69,15 +43,3 @@
   lineinfile: dest=/etc/services line='flocker-control-agent     4524/tcp' insertafter=EOF
 
 - service: name=flocker-control state=restarted
-
-- name: Set agent config
-  template: src=templates/flocker-agent.j2 dest=/etc/flocker/agent.yml
-
-- service: name=flocker-container-agent state=restarted
-
-- service: name=flocker-dataset-agent state=restarted
-
-- name: Set plugin config
-  template: src=templates/flocker-docker-plugin.conf.j2 dest=/etc/init/flocker-docker-plugin.conf
-
-- service: name=flocker-docker-plugin state=restarted
