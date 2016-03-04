@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    CONTROL_IP: "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
+    NODE_IP:  "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
+  tasks:
+    - include: ./tasks/main.yml
